@@ -1,13 +1,15 @@
+#get required libraries
+library(httr)
+library(jsonlite)
+library(xml2)
+library(rlist)
+library(dplyr)
+library(XML)
+library(readr)
+
 #clean_GO_terms####
 #this function will take a vector of GO_terms and use the quickGO api to retrieve updated terms for them.
 clean_GO_terms <- function(GO_terms){
-  #get the packages
-  require(httr)
-  require(jsonlite)
-  require(xml2)
-  require(rlist)
-  require(dplyr)
-  
   #remove NAs and duplicates
   GO_terms <- GO_terms[!is.na(GO_terms)]
   if(length(GO_terms) != length(unique(GO_terms))){
@@ -114,10 +116,6 @@ clean_GO_terms <- function(GO_terms){
 #this function uses the API of revigo (http://revigo.irb.hr/FAQ) to summarize a list of GO terms into simpler terms. 
 #it accepts as input both a vector of GOterms, or a data frame with two columns, the first being the GOterms and the second being the value (like pvalue for instance)
 revigo_query <- function(goList, cutoff = "0.7", valueType = c("PValue", "Higher", "Lower", "HigherAbsolute", "HigherAbsLog2"), speciesTaxon = "0", measure = c("SIMREL", "LIN", "RESNIK", "JIANG"), removeObsolete = TRUE){
-  require(httr)
-  #require(rvest)
-  require(XML)
-  require(readr)
   
   #check function parameters
   valueType <- match.arg(valueType)
