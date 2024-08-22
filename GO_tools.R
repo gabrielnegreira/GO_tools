@@ -135,7 +135,7 @@ revigo_query <- function(GO_terms, cutoff = "0.7", valueType = c("PValue", "High
       valueType = valueType,
       speciesTaxon = speciesTaxon,
       measure = measure,
-      GOList = input,
+      goList = input,
       removeObsolete = tolower(as.character(removeObsolete))
     ),
     # application/x-www-form-urlencoded
