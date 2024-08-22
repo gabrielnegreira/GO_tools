@@ -115,14 +115,14 @@ clean_GO_terms <- function(GO_terms){
 #revigo_query####
 #this function uses the API of revigo (http://revigo.irb.hr/FAQ) to summarize a list of GO terms into simpler terms. 
 #it accepts as input both a vector of GOterms, or a data frame with two columns, the first being the GOterms and the second being the value (like pvalue for instance)
-revigo_query <- function(goList, cutoff = "0.7", valueType = c("PValue", "Higher", "Lower", "HigherAbsolute", "HigherAbsLog2"), speciesTaxon = "0", measure = c("SIMREL", "LIN", "RESNIK", "JIANG"), removeObsolete = TRUE){
+revigo_query <- function(GO_terms, cutoff = "0.7", valueType = c("PValue", "Higher", "Lower", "HigherAbsolute", "HigherAbsLog2"), speciesTaxon = "0", measure = c("SIMREL", "LIN", "RESNIK", "JIANG"), removeObsolete = TRUE){
   
   #check function parameters
   valueType <- match.arg(valueType)
   measure <- match.arg(measure)
   
   #first convert the provided table to a temporary tsv file
-  write_tsv(as.data.frame(goList), file = "temp.tsv")
+  write_tsv(as.data.frame(GO_terms), file = "temp.tsv")
   #now load the tsv file as is
   input <- readChar("temp.tsv",file.info("temp.tsv")$size)
   file.remove("temp.tsv")
@@ -135,7 +135,7 @@ revigo_query <- function(goList, cutoff = "0.7", valueType = c("PValue", "Higher
       valueType = valueType,
       speciesTaxon = speciesTaxon,
       measure = measure,
-      goList = input,
+      GO_terms = input,
       removeObsolete = tolower(as.character(removeObsolete))
     ),
     # application/x-www-form-urlencoded
@@ -175,6 +175,7 @@ revigo_query <- function(goList, cutoff = "0.7", valueType = c("PValue", "Higher
       dat_df$repr_name[i] <- dat_df$repr_name[i-1]
     }
   }
+  rownames(dat_df) <- dat_df$
   return(dat_df)
 }
 
