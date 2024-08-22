@@ -175,7 +175,7 @@ revigo_query <- function(GO_terms, cutoff = "0.7", valueType = c("PValue", "High
       dat_df$repr_name[i] <- dat_df$repr_name[i-1]
     }
   }
-  rownames(dat_df) <- dat_df$
+  rownames(dat_df) <- dat_df$term_id
   return(dat_df)
 }
 
