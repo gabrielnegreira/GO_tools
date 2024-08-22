@@ -179,6 +179,74 @@ revigo_query <- function(GO_terms, cutoff = "0.7", valueType = c("PValue", "High
   return(dat_df)
 }
 
+#get_GO_data####
+#This function takes as input a vector of GO terms and return a data.frame containing additional metadata for those terms.
+get_GO_data <- function(GO_terms){
+  #remove NAs and duplicates
+  GO_terms <- GO_terms[!is.na(GO_terms)]
+  if(length(GO_terms) != length(unique(GO_terms))){
+    warning("found multiple occurences of identical terms. Only one occurence will be considered.")
+    GO_terms <- unique(GO_terms)
+  }
+  
+  #create the dataframe where the new information will be stored
+  final_data <- data.frame(input_term = GO_terms)
+  #setting row names to the input term makes it easier to map results later to the correct rows in the dataframe.
+  rownames(final_data) <- final_data$input_term
+  
+  #create a single string containing the GO terms in the expected format for the URL request
+  string_to_search <- gsub("\\:", "%3A", GO_terms)
+  
+  #the quick GO API accepts a maximum of 525 terms per query, so we'll break the vector to run multiple queries.
+  breaks <- seq(0, length(string_to_search), 525)
+  breaks <- unique(c(breaks, length(string_to_search)))
+  res_list <- list()
+  for(i in c(2:length(breaks))){
+    #create the request URL for the complete information about the GO terms
+    indexes <- c(breaks[i-1]:breaks[i])
+    requestURL <- paste0("https://www.ebi.ac.uk/QuickGO/services/ontology/go/terms/", paste0(string_to_search[indexes], collapse = "%2C"), "/complete")
+    #make the request
+    r <- GET(requestURL, accept("application/json"))
+    #check for errors
+    stop_for_status(r)
+    #convert the JSON formatted data to a list
+    res <- content(r)$results
+    #append the results to the final list with all information per term
+    indexes <- c((length(res_list)+1):(length(res_list)+length(res)))
+    res_list[indexes] <- res
+  }
+  
+  #set the names of the list objects to the GO term id
+  names(res_list) <- sapply(res_list, function(x) x$id)
+  
+  #update the results dataframe with the information about whether the term is in the quickGO database
+  final_data$is_in_db <- final_data$input_term %in% unique(c(names(res_list), as.character(unlist(sapply(res_list, function(x) x$secondaryIds)))))
+  #now we have to find which terms are secondary ids
+  final_data$is_secondary <- final_data$input_term %in% as.character(unlist(sapply(res_list, function(x) x$secondaryIds)))
+  
+  #find the primary ids of the secondary terms
+  final_data$primary_term <- NA
+  for(secondary_term in filter(final_data, is_secondary)$input_term){
+    index <- which(grepl(secondary_term, sapply(res_list, function(x) x$secondaryIds)))
+    final_data[secondary_term,]$primary_term <- unique(names(res_list[index]))
+  }
+  
+  #defined the optimal term for each input term
+  final_data <- final_data %>%
+    mutate(db_term = ifelse(is.na(primary_term), input_term, primary_term),
+           name = as.character(sapply(res_list, function(x) x$name)[db_term]),
+           is_obsolete = as.logical(as.character(sapply(res_list, function(x) x$isObsolete)[db_term])),
+           aspect = as.character(sapply(res_list, function(x) x$aspect)[db_term]),
+           replaced_by = ifelse(is_obsolete, as.character(sapply(res_list, function(x){
+             x <- x$replacements
+             x <- list.filter(x, type == "replaced_by")
+             x <- sapply(x, function(x) as.character(x$id))
+           })[db_term]), NA),
+           replaced_by = ifelse(replaced_by == "list()", NA, replaced_by))
+  
+  return(final_data)
+}
+
 #GO_enrich####
 #function to perform a simple GO enrichment analysis using hypergeometric distribution statistics.
 #it expects two vectors, one containing the GO_terms found among the differential expressed genes (set_terms).
