@@ -254,7 +254,8 @@ get_GO_data <- function(GO_terms){
 GO_enrich <- function(set_terms, ref_terms, test_type = c("enrichment", "depletion", "both")){
   test_type <- match.arg(test_type)
   test_type <- c("enrichment" = "greater", "depletion" = "less", "both" = "two.sided")[test_type]
-  results <- as.data.frame(sort(table(set_terms), decreasing = TRUE))
+  results <- sort(table(set_terms), decreasing = TRUE)
+  results <- data.frame(set_terms = names(results), Freq = as.numeric(results))
   results$pvalue <- NA
   results$count_in_ref <- NA
   for(i in c(1:nrow(results))){
