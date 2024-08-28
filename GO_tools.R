@@ -38,7 +38,7 @@ clean_GO_terms <- function(GO_terms){
     #check for errors
     stop_for_status(r)
     #convert the JSON formatted data to a list
-    res <- content(r)$results
+    res <- httr::content(r)$results
     #append the results to the final list with all information per term
     indexes <- c((length(res_list)+1):(length(res_list)+length(res)))
     res_list[indexes] <- res
@@ -95,7 +95,7 @@ clean_GO_terms <- function(GO_terms){
     #check for errors
     stop_for_status(r)
     #convert the JSON formatted data to a list
-    res <- content(r)$results
+    res <- httr::content(r)$results
     #append the results to the final list will all information per term
     indexes <- c((length(res_list)+1):(length(res_list)+length(res)))
     res_list[indexes] <- res
@@ -143,7 +143,7 @@ revigo_query <- function(GO_terms, cutoff = "0.7", valueType = c("PValue", "High
   )
   print("done!")
   #convert the html output to a dataframe
-  dat <- httr::content(results, encoding = "UTF-8")
+  dat <- httr::httr::content(results, encoding = "UTF-8")
   dat <- readHTMLTable(htmlParse(dat))
   
   #fix the go_type names to match other databases such as the quickGO
@@ -210,7 +210,7 @@ get_GO_data <- function(GO_terms){
     #check for errors
     stop_for_status(r)
     #convert the JSON formatted data to a list
-    res <- content(r)$results
+    res <- httr::content(r)$results
     #append the results to the final list with all information per term
     indexes <- c((length(res_list)+1):(length(res_list)+length(res)))
     res_list[indexes] <- res
