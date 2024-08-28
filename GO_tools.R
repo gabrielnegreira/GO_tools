@@ -143,7 +143,7 @@ revigo_query <- function(GO_terms, cutoff = "0.7", valueType = c("PValue", "High
   )
   print("done!")
   #convert the html output to a dataframe
-  dat <- httr::httr::content(results, encoding = "UTF-8")
+  dat <- httr::content(results, encoding = "UTF-8")
   dat <- readHTMLTable(htmlParse(dat))
   
   #fix the go_type names to match other databases such as the quickGO
