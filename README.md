@@ -70,7 +70,7 @@ A data frame with:
 - Term frequencies in both the test and reference sets.
 - Proportions in both the test and reference sets.
 - Log2 enrichment ratios.
-- - P-values from Fisher's test.
+- P-values from Fisher's test.
 
 ## Notes
 
