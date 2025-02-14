@@ -35,14 +35,6 @@ Cleans a vector of GO terms by removing missing values and duplicates, then retr
 
 **Usage Example:**
 
-```r
-# Define a vector of GO terms
-my_GO_terms <- c("GO:0008150", "GO:0003674", "GO:0005575")
-
-# Clean and update GO term information
-updated_terms <- clean_GO_terms(my_GO_terms)
-```
-
 ### 2. `revigo_query`
 
 **Purpose:**  
@@ -55,24 +47,10 @@ Summarizes a list of GO terms into simpler, representative terms using the Revig
 - `measure`: Similarity measure to use; options include "SIMREL", "LIN", "RESNIK", "JIANG".
 - `removeObsolete`: Logical flag indicating whether to remove obsolete terms (default is TRUE).
 
-**Usage Example:**
-
-```r
-# Summarize GO terms using the Revigo API
-summary_df <- revigo_query(my_GO_terms, cutoff = "0.7", valueType = "PValue")
-```
-
 ### 3. `get_GO_data`
 
 **Purpose:**  
 Fetches additional metadata for a given vector of GO terms by querying the QuickGO API. Similar to `clean_GO_terms`, it handles missing values and duplicates, and returns detailed information such as term name, aspect, and obsolete status.
-
-**Usage Example:**
-
-```r
-# Retrieve detailed GO term metadata
-go_data <- get_GO_data(my_GO_terms)
-```
 
 ### 4. `GO_enrich`
 
@@ -89,41 +67,10 @@ Performs a GO enrichment analysis using hypergeometric statistics and Fisher's e
 
 **Returns:**  
 A data frame with:
-- Term frequencies in the test set.
-- P-values from Fisher's test.
+- Term frequencies in both the test and reference sets.
 - Proportions in both the test and reference sets.
 - Log2 enrichment ratios.
-
-**Usage Example:**
-
-```r
-# Perform GO enrichment analysis
-enrichment_results <- GO_enrich(set_terms = my_GO_terms, ref_terms = my_GO_terms, test_type = "enrichment")
-```
-
-## Example Workflow
-
-Below is a simple workflow demonstrating how to use the functions in this script:
-
-```r
-# Source the GO_tools.R script
-source("GO_tools.R")
-
-# Define a vector of GO terms
-my_GO_terms <- c("GO:0008150", "GO:0003674", "GO:0005575")
-
-# 1. Clean and update GO term information
-updated_terms <- clean_GO_terms(my_GO_terms)
-
-# 2. Retrieve detailed GO term data
-go_data <- get_GO_data(my_GO_terms)
-
-# 3. Summarize GO terms using Revigo API
-summary_df <- revigo_query(my_GO_terms, cutoff = "0.7", valueType = "PValue")
-
-# 4. Perform GO enrichment analysis (example uses the same GO terms for both test and reference)
-enrichment_results <- GO_enrich(set_terms = my_GO_terms, ref_terms = my_GO_terms, test_type = "enrichment")
-```
+- - P-values from Fisher's test.
 
 ## Notes
 
