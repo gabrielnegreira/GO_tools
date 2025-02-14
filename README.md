@@ -61,9 +61,9 @@ Performs a GO enrichment analysis using hypergeometric statistics and Fisher's e
 - `set_terms`: A vector of GO terms from the test set.
 - `ref_terms`: A vector of GO terms from the reference set.
 - `test_type`: Specifies the alternative hypothesis. Options are:
-  - `"enrichment"` (uses "greater"),
-  - `"depletion"` (uses "less"),
-  - `"both"` (uses "two.sided").
+- `"enrichment"` (uses "greater"),
+- `"depletion"` (uses "less"),
+- `"both"` (uses "two.sided").
 
 **Returns:**  
 A data frame with:
