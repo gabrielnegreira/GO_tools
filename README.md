@@ -14,10 +14,6 @@ system("git clone https://github.com/gabrielnegreira/GO_tools.git")
 #source it
 source("GO_tools/GO_tools.R")
 ```
-We can then append metadata of interest to our main dataframe:
-```r
-```
-
 This will load the functions to the environment.
 ## Overview of Functions
 
