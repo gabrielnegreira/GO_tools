@@ -267,14 +267,14 @@ GO_enrich <- function(set_terms, ref_terms, test_type = c("enrichment", "depleti
     n <- length(ref_terms) - m
     
     #build the contingency matrix for fisher test
-    cont_matrix <- matrix(ncol = 2, nrow = 2)
-    cont_matrix[1,1] <- x
-    cont_matrix[2,1] <- k-x
-    cont_matrix[1,2] <- m-x
-    cont_matrix[2,2] <- n-(k-x)
+    count_matrix <- matrix(ncol = 2, nrow = 2)
+    count_matrix[1,1] <- x
+    count_matrix[2,1] <- k-x
+    count_matrix[1,2] <- m-x
+    count_matrix[2,2] <- n-(k-x)
     
     #perform_fisher test
-    results$pvalue[i] <- fisher.test(cont_matrix, alternative = test_type)$p.value
+    results$pvalue[i] <- fisher.test(count_matrix, alternative = test_type)$p.value
     
     #add extra info
     results$count_in_ref[i] <- m
